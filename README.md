@@ -9,11 +9,7 @@ but nothing beats reinventing the wheel
 
 ### Usage
 
-~~~~
-$cp configuration-sample.json configuration.json
-//edit -> configuration.json
-~~~~
-
+### Just look into main.go....
 
 List of Faker <generator> types:
 

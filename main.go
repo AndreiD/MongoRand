@@ -5,30 +5,26 @@ import (
 	"github.com/bxcodec/faker"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"log"
 	"math/rand"
-	"mongorand/configs"
-	"mongorand/database"
 	"reflect"
 	"time"
 )
 
-const runs = 2 // <-------- MODIFY ME
+// MODIFY ME
+const (
+	runs     = 2
+	mongoURI = "mongodb+srv://user:pass@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/test?retryWrites=true&w=majority"
+	dbName   = "DB_NAME_HERE"
+)
 
 var db *mongo.Database
-var configuration *configs.ViperConfiguration
 
-func init() {
-	configuration = configs.NewConfiguration()
-	configuration.Init()
-	log.Println("=======================================")
-	log.Printf("Starting Mongo Random Filler. Running %d times", runs)
-	log.Println("=======================================")
-
-}
 func main() {
 
-	db, err := database.InitDatabase(configuration.Get("database.mongoURI"), configuration.Get("database.dbname"))
+	db, err := initDatabase(mongoURI, dbName)
 	if err != nil {
 		log.Fatal("Couldn't connect to the database", err)
 	}
@@ -70,4 +66,27 @@ func main() {
 		}
 	}
 
+}
+
+func initDatabase(mongoURI string, Dbname string) (*mongo.Database, error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	clientOptions := options.Client().ApplyURI(mongoURI)
+	client, err := mongo.NewClient(clientOptions)
+	if err != nil {
+		return nil, err
+	}
+	err = client.Connect(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	err = client.Ping(ctx, readpref.Primary())
+	if err != nil {
+		return nil, err
+	}
+
+	return client.Database(Dbname), nil
 }

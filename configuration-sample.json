@@ -1,6 +1,0 @@
-{
-  "database": {
-    "mongoURI": "mongodb+srv://xxx:xxxxxxx@clusterxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    "dbname": "xxxxxxxxxxxxx"
-  }
-}

@@ -9,7 +9,11 @@ but nothing beats reinventing the wheel
 
 ### Usage
 
-### Just look into main.go....
+~~~~
+Edit & Run main.go file
+~~~~
+
+====================================
 
 List of Faker <generator> types:
 

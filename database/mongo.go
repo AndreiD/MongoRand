@@ -9,10 +9,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var db *mongo.Database
-
 // InitDatabase .
-func InitDatabase(mongoURI string, Dbname string) error {
+func InitDatabase(mongoURI string, Dbname string) (*mongo.Database, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -20,18 +18,17 @@ func InitDatabase(mongoURI string, Dbname string) error {
 	clientOptions := options.Client().ApplyURI(mongoURI)
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	err = client.Connect(ctx)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = client.Ping(ctx, readpref.Primary())
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	db = client.Database(Dbname)
-	return nil
+	return client.Database(Dbname), nil
 }

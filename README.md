@@ -1,8 +1,8 @@
 # A very simple random data generator for MongoDB
 
-### Sometimes an online json/csv random generator won't cut it, so you have to get your hands dirty
+### Sometimes an online json/csv random generator just won't cut it, so you have to get your hands dirty
 
-Data from -> https://github.com/bxcodec/faker
+Random Data from -> https://github.com/bxcodec/faker
 
 I know there are some beautiful generators out there,
 but nothing beats reinventing the wheel 

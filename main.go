@@ -22,6 +22,18 @@ const (
 
 var db *mongo.Database
 
+type RandStruct struct {
+	Latitude      float32 `faker:"lat"`
+	Longitude     float32 `faker:"long"`
+	Email         string  `faker:"email"`
+	PhoneNumber   string  `faker:"phone_number"`
+	URL           string  `faker:"url"`
+	LastName      string  `faker:"last_name"`
+	FirstName     string  `faker:"first_name"`
+	Paragraph     string  `faker:"paragraph"`
+	UUIDHypenated string  `faker:"uuid_hyphenated"`
+}
+
 func main() {
 
 	db, err := initDatabase(mongoURI, dbName)
@@ -30,26 +42,22 @@ func main() {
 	}
 	log.Println("Connected ok to the database")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
 	for i := 0; i < runs; i++ {
 
-		name, _ := faker.GetPerson().FirstName(reflect.Value{})
-		phone, _ := faker.GetPhoner().PhoneNumber(reflect.Value{})
-		website, _ := faker.GetNetworker().URL(reflect.Value{})
-		ip, _ := faker.GetNetworker().IPv4(reflect.Value{})
-		paragraph, _ := faker.GetLorem().Paragraph(reflect.Value{})
+		r := RandStruct{}
+		err := faker.FakeData(&r)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		_, err := db.Collection("users").InsertOne(
-			ctx,
+			context.Background(),
 			bson.D{
-				{"name", name},
-				{"phone", phone},
-				{"website", website},
-				{"ip", ip},
+				{"name", r.FirstName},
+				{"phone", r.PhoneNumber},
+				{"website", r.URL},
 				{"created_at", time.Now().Unix()},
-				{"paragraph", paragraph},
+				{"paragraph", r.Paragraph},
 				{"qty", rand.Intn(100)},
 				{"expertise", bson.A{"computers", "cars", "planes", "buses"}},
 				{"office_hours", bson.D{

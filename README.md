@@ -5,7 +5,7 @@
 Random Data from -> https://github.com/bxcodec/faker
 
 I know there are some beautiful generators out there,
-but nothing beats reinventing the wheel 
+but nothing beats reinventing the wheel!
 
 ### Usage
 
